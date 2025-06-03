@@ -143,36 +143,51 @@
   </style>
 </head>
 <body>
+  <!-- Banner Poster with interactive stage buttons overlay -->
+  <div style="width:100%; max-width:1100px; margin: 0 auto 20px auto; text-align:center; position:relative;">
+    <img src="Icons/poster.png" alt="Align & Mine Event Poster" style="width:100%; max-width:1100px; border-radius:10px; box-shadow:0 4px 24px #000a;">
+    <!-- Interactive Stage Buttons Overlay -->
+    <div style="position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none;">
+      <!-- Adjust the left/top/width/height % for each button to match the stage areas on your poster -->
+      <button onclick="selectStage('phase1')" style="position:absolute; left:6%; top:13%; width:18%; height:18%; opacity:0.15; pointer-events:auto; border-radius:12px; border:2px solid #ffcc00; background:#ffcc00;"></button>
+      <button onclick="selectStage('phase2')" style="position:absolute; left:73%; top:13%; width:18%; height:18%; opacity:0.15; pointer-events:auto; border-radius:12px; border:2px solid #ffcc00; background:#ffcc00;"></button>
+      <button onclick="selectStage('phase3')" style="position:absolute; left:6%; top:65%; width:18%; height:18%; opacity:0.15; pointer-events:auto; border-radius:12px; border:2px solid #ffcc00; background:#ffcc00;"></button>
+      <button onclick="selectStage('phase4')" style="position:absolute; left:45%; top:40%; width:10%; height:18%; opacity:0.15; pointer-events:auto; border-radius:12px; border:2px solid #ffcc00; background:#ffcc00;"></button>
+    </div>
+  </div>
   <div class="container">
     <h1>🚀 Align & Mine Event Interactive Guide</h1>
     <p>Activate the Orbital Mining Laser, collect resources, and secure your extraction!</p>
     
     <!-- Tab navigation inspired by a control-panel layout -->
     <div class="nav-tabs">
-      <button class="tablink active" data-tab="phase1">Phase 1: Setup</button>
-      <button class="tablink" data-tab="phase2">Phase 2: Activation</button>
-      <button class="tablink" data-tab="phase3">Phase 3: Defense & Extraction</button>
-      <button class="tablink" data-tab="phase4">Phase 4: Evacuation</button>
+      <button class="tablink active" data-tab="phase1">Stage 1: Setup</button>
+      <button class="tablink" data-tab="phase2">Stage 2: Activation</button>
+      <button class="tablink" data-tab="phase3">Stage 3: Defense & Extraction</button>
+      <button class="tablink" data-tab="phase4">Stage 4: Evacuation</button>
     </div>
     
-    <!-- Phase 1: Setup -->
+    <!-- Stage 1: Setup -->
     <div id="phase1" class="zone active">
-      <h2>Phase 1: Setup</h2>
-      <div class="mission-step" data-points="10">
+      <h2>Stage 1: Setup</h2>
+      <div class="mission-step" id="satelliteAlignmentStep">
         <span class="priority">High</span>
         <strong>Satellite Alignment</strong> – Locate and adjust satellite relays.
+        <small id="satelliteLocations">Locations: Ruptura PAF-I,  Ruptura PAF-II,  Ruptura PAF-III</small>
         <small>Role: Tech Specialists</small>
+        <img src="Icons/sat.png" alt="Satellite Alignment Facility" style="width:100%; max-width:400px; margin-top:10px; border-radius:8px; box-shadow:0 2px 12px #000a;">
       </div>
-      <div class="mission-step" data-points="5">
+      <div class="mission-step">
         <span class="priority">Low</span>
         <strong>Keycard Collection</strong> – Search for keycards to access restricted areas.
         <small>Role: Resource Gatherers, Security Team & Transport Pilots</small>
+        <img src="Icons/keycard.png" alt="Laser Activation Keycard" style="width:100%; max-width:220px; margin-top:10px; border-radius:8px; box-shadow:0 2px 12px #000a;">
       </div>
     </div>
     
-    <!-- Phase 2: Activation -->
+    <!-- Stage 2: Activation -->
     <div id="phase2" class="zone">
-      <h2>Phase 2: Activation</h2>
+      <h2>Stage 2: Activation</h2>
       <div class="mission-step" data-points="10">
         <span class="priority">High</span>
         <strong>Battery Retrieval</strong> – Locate and transport batteries to power terminals.
@@ -185,9 +200,9 @@
       </div>
     </div>
     
-    <!-- Phase 3: Defense & Extraction -->
+    <!-- Stage 3: Defense & Extraction -->
     <div id="phase3" class="zone">
-      <h2>Phase 3: Defense & Extraction</h2>
+      <h2>Stage 3: Defense & Extraction</h2>
       <div class="mission-step" data-points="20">
         <span class="priority">Critical</span>
         <strong>Defensive Setup</strong> – Deploy security teams to thwart NPC attacks.
@@ -200,29 +215,14 @@
       </div>
     </div>
     
-    <!-- Phase 4: Evacuation -->
+    <!-- Stage 4: Evacuation -->
     <div id="phase4" class="zone">
-      <h2>Phase 4: Evacuation</h2>
+      <h2>Stage 4: Evacuation</h2>
       <div class="mission-step" data-points="25">
         <span class="priority">Critical</span>
         <strong>Escape & Evacuation</strong> – Secure resources and retreat before reinforcements arrive.
         <small>Role: All Teams</small>
       </div>
-    </div>
-    
-    <!-- Progress tracking -->
-    <div style="text-align:center">
-      <h2>Your Progress</h2>
-      <p><strong>Points:</strong> <span id="points">0</span></p>
-      <button class="button" onclick="completeStep()">✅ Complete Next Step</button>
-    </div>
-    
-    <!-- Achievements / Special Badges -->
-    <div style="text-align:center; margin-top: 20px;">
-      <h2>Achievements</h2>
-      <div class="badge">🚀 Satellite Whisperer</div>
-      <div class="badge">🔥 Aberdeen Survivor</div>
-      <div class="badge">🔎 Stealth Specialist</div>
     </div>
     
     <!-- Add Planet Selection -->
@@ -320,6 +320,20 @@
       });
     });
 
+    // Add this function to your <script> section
+    function selectStage(phaseId) {
+      // Switch tab visually
+      document.querySelectorAll('.tablink').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.getAttribute('data-tab') === phaseId) btn.classList.add('active');
+      });
+      // Show the correct stage panel
+      document.querySelectorAll('.zone').forEach(zone => {
+        zone.classList.remove('active');
+        if (zone.id === phaseId) zone.classList.add('active');
+      });
+    }
+
     // Update role details and highlight selected button
     function updateRoleDetails(role, button) {
       const roleDetailsDiv = document.getElementById('roleDetails');
@@ -365,6 +379,16 @@
       document.querySelectorAll('#planetButtons .button').forEach(btn => btn.classList.remove('selected'));
       button.classList.add('selected');
 
+      // Update satellite alignment locations based on planet
+      const satelliteLocations = document.getElementById('satelliteLocations');
+      if (satelliteLocations) {
+        if (location === 'aberdeen') {
+          satelliteLocations.textContent = "Locations: Ruptura PAF-I,  Ruptura PAF-II, Ruptura PAF-III, Vivere PAF-I, Vivere PAF-II, Vivere PAF-III";
+        } else if (location === 'daymar') {
+          satelliteLocations.textContent = "Locations: Attritus PAF-I,  Attritus PAF-II,  Attritus PAF-III, Lamina_PAF-I, Lamina_PAF-II, Lamina_PAF-III";
+        }
+      }
+
       if (location === 'aberdeen') {
         equipmentDiv.innerHTML = `
           <p><strong>Required Equipment:</strong> Pembroke Exploration Suit</p>
@@ -381,3 +405,4 @@
   </script>
 </body>
 </html>
+``` 
